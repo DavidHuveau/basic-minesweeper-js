@@ -1,0 +1,36 @@
+body {
+  background: black;
+  color: #dddddd;
+  font-family: "courier new";
+  text-align: center;
+}
+
+h1 {
+  font-size: 14pt;
+  font-weight: normal;
+}
+
+#game-grid {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#game-grid tr td{
+  border: 1px solid white;
+  background: #999999;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+}
+
+#game-grid tr td.clicked {
+    background: #333333;
+}
+
+#game-grid tr td.mine {
+    background: #FF0000;
+}
+
+button {
+  margin: 12px;
+}
