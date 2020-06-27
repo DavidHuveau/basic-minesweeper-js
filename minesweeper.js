@@ -54,9 +54,11 @@ class Minesweeper {
   }
 
   addMinesRandomly() {
-    const mines_number = Math.floor(GAME_GRID_ROWS_NUMBER * GAME_GRID_CELLS_NUMBER * PERCENTAGE_OF_MINES);
+    const minesNumber = Math.floor(
+      GAME_GRID_ROWS_NUMBER * GAME_GRID_CELLS_NUMBER * PERCENTAGE_OF_MINES,
+    );
 
-    for (let index = 0; index < mines_number; index++) {
+    for (let index = 0; index < minesNumber; index++) {
       const row = Math.floor(Math.random() * GAME_GRID_ROWS_NUMBER);
       const col = Math.floor(Math.random() * GAME_GRID_CELLS_NUMBER);
       const cell = this.gameGrid.rows[row].cells[col];
@@ -90,7 +92,7 @@ class Minesweeper {
       const mineCount = this.countAdjacentMines(cell);
       cell.innerHTML = mineCount;
 
-      if (mineCount == 0) {
+      if (mineCount === 0) {
         this.revealAllAdjacentCells(cell);
       }
 
@@ -103,7 +105,7 @@ class Minesweeper {
     let mineCount = 0;
 
     this.browseAdjacentCells(cell, (rowIndex, cellIndex) => {
-      if (self.gameGrid.rows[rowIndex].cells[cellIndex].getAttribute(MINE_DATA_ATTRIBUTE) == 'true') {
+      if (self.gameGrid.rows[rowIndex].cells[cellIndex].getAttribute(MINE_DATA_ATTRIBUTE) === 'true') {
         mineCount++;
       }
     });
@@ -115,7 +117,7 @@ class Minesweeper {
 
     this.browseAdjacentCells(cell, (rowIndex, cellIndex) => {
       const analyzedCell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if (analyzedCell.innerHTML == '') {
+      if (analyzedCell.innerHTML === '') {
         self.clickCell(analyzedCell);
       }
     });
@@ -128,7 +130,7 @@ class Minesweeper {
 
     this.browseAllCells((rowIndex, cellIndex) => {
       analyzedCell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if ((analyzedCell.getAttribute(MINE_DATA_ATTRIBUTE) == 'false') && (analyzedCell.innerHTML == '')) {
+      if ((analyzedCell.getAttribute(MINE_DATA_ATTRIBUTE) === 'false') && (analyzedCell.innerHTML === '')) {
         levelComplete = false;
       }
     });
@@ -150,22 +152,32 @@ class Minesweeper {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   browseAdjacentCells(cell, cb) {
     const cellRowPosition = cell.parentNode.rowIndex;
     const cellColPosition = cell.cellIndex;
+
     const maxRowPosition = GAME_GRID_ROWS_NUMBER - 1;
     const maxCellPosition = GAME_GRID_CELLS_NUMBER - 1;
 
-    for (let rowIndex = Math.max(cellRowPosition - 1, 0); rowIndex <= Math.min(cellRowPosition + 1, maxRowPosition); rowIndex++) {
-      for (let cellIndex = Math.max(cellColPosition - 1, 0); cellIndex <= Math.min(cellColPosition + 1, maxCellPosition); cellIndex++) {
+    const startRowIndex = Math.max(cellRowPosition - 1, 0);
+    const endRowIndex = Math.min(cellRowPosition + 1, maxRowPosition);
+
+    for (let rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
+      const startCellIndex = Math.max(cellColPosition - 1, 0);
+      const endCellIndex = Math.min(cellColPosition + 1, maxCellPosition);
+      for (let cellIndex = startCellIndex; cellIndex <= endCellIndex; cellIndex++) {
         cb(rowIndex, cellIndex);
       }
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   showMessage(message) {
     setTimeout(() => {
-      alert(message);
+      alert(message); // eslint-disable-line no-alert
     }, 100);
   }
 }
+
+module.exports = Minesweeper;
