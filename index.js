@@ -1,1 +1,1 @@
-const test = new Minesweeper();
+new Minesweeper();

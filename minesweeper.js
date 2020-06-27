@@ -11,7 +11,7 @@ const GAME_GRID_CELLS_NUMBER = 30;
 
 const PERCENTAGE_OF_MINES = 0.2;
 
- // Turn this variable to true to see where the mines are
+// Turn this variable to true to see where the mines are
 const testMode = true;
 
 class Minesweeper {
@@ -84,11 +84,10 @@ class Minesweeper {
       this.revealMines();
 
       this.showMessage("Game Over");
-    }
-    else {
+    } else {
       cell.className = "clicked";
 
-      const mineCount = this.countAdjacentMines(cell)
+      const mineCount = this.countAdjacentMines(cell);
       cell.innerHTML = mineCount;
 
       if (mineCount == 0) {
@@ -158,7 +157,7 @@ class Minesweeper {
     const maxCellPosition = GAME_GRID_CELLS_NUMBER - 1;
 
     for (let rowIndex = Math.max(cellRowPosition - 1, 0); rowIndex <= Math.min(cellRowPosition + 1, maxRowPosition); rowIndex++) {
-      for(let cellIndex = Math.max(cellColPosition - 1, 0); cellIndex <= Math.min(cellColPosition + 1, maxCellPosition); cellIndex++) {
+      for (let cellIndex = Math.max(cellColPosition - 1, 0); cellIndex <= Math.min(cellColPosition + 1, maxCellPosition); cellIndex++) {
         cb(rowIndex, cellIndex);
       }
     }

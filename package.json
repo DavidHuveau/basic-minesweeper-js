@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/DavidHuveau/basic-minesweeper-js/issues"
   },
-  "homepage": "https://github.com/DavidHuveau/basic-minesweeper-js#readme"
+  "homepage": "https://github.com/DavidHuveau/basic-minesweeper-js#readme",
+  "devDependencies": {
+    "eslint": "^7.3.1"
+  }
 }
