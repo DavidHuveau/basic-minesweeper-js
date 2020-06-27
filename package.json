@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint . --fix"
+    "lint": "eslint --ext .js .;exit 0"
   },
   "repository": {
     "type": "git",
@@ -19,5 +19,9 @@
   "homepage": "https://github.com/DavidHuveau/basic-minesweeper-js#readme",
   "devDependencies": {
     "eslint": "^7.3.1"
+  },
+  "dependencies": {
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.0"
   }
 }

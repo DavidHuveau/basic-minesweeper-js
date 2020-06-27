@@ -1,9 +1,9 @@
 // Elements ID
-const RESET_BUTTON_ID = "reset-button";
-const GAME_GRID_ID = "game-grid";
+const RESET_BUTTON_ID = 'reset-button';
+const GAME_GRID_ID = 'game-grid';
 
 // mines
-const MINE_DATA_ATTRIBUTE = "data-mine";
+const MINE_DATA_ATTRIBUTE = 'data-mine';
 
 // Game board options
 const GAME_GRID_ROWS_NUMBER = 20;
@@ -27,7 +27,7 @@ class Minesweeper {
     const self = this;
 
     const resetButton = document.getElementById(RESET_BUTTON_ID);
-    resetButton.onclick = function() {
+    resetButton.onclick = function () {
       self.generateGrid();
     };
   }
@@ -35,17 +35,17 @@ class Minesweeper {
   generateGrid() {
     const self = this;
 
-    this.gameGrid.innerHTML = "";
+    this.gameGrid.innerHTML = '';
 
     for (let rowIndex = 0; rowIndex < GAME_GRID_ROWS_NUMBER; rowIndex++) {
       const row = this.gameGrid.insertRow(rowIndex);
       for (let cellIndex = 0; cellIndex < GAME_GRID_CELLS_NUMBER; cellIndex++) {
         const cell = row.insertCell(cellIndex);
-        cell.onclick = function() {
+        cell.onclick = function () {
           self.clickCell(this);
         };
         const mine = document.createAttribute(MINE_DATA_ATTRIBUTE);
-        mine.value = "false";
+        mine.value = 'false';
         cell.setAttributeNode(mine);
       }
     }
@@ -60,9 +60,9 @@ class Minesweeper {
       const row = Math.floor(Math.random() * GAME_GRID_ROWS_NUMBER);
       const col = Math.floor(Math.random() * GAME_GRID_CELLS_NUMBER);
       const cell = this.gameGrid.rows[row].cells[col];
-      cell.setAttribute(MINE_DATA_ATTRIBUTE, "true");
+      cell.setAttribute(MINE_DATA_ATTRIBUTE, 'true');
       if (testMode) {
-        cell.innerHTML = "X";
+        cell.innerHTML = 'X';
       }
     }
   }
@@ -70,22 +70,22 @@ class Minesweeper {
   revealMines() {
     const self = this;
 
-    this.browseAllCells(function(rowIndex, cellIndex) {
+    this.browseAllCells((rowIndex, cellIndex) => {
       const cell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if (cell.getAttribute(MINE_DATA_ATTRIBUTE) == "true") {
-        cell.className = "mine";
+      if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === 'true') {
+        cell.className = 'mine';
       }
     });
   }
 
   // Check if the user clicked on a mine
   clickCell(cell) {
-    if (cell.getAttribute(MINE_DATA_ATTRIBUTE) == "true") {
+    if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === 'true') {
       this.revealMines();
 
-      this.showMessage("Game Over");
+      this.showMessage('Game Over');
     } else {
-      cell.className = "clicked";
+      cell.className = 'clicked';
 
       const mineCount = this.countAdjacentMines(cell);
       cell.innerHTML = mineCount;
@@ -102,8 +102,8 @@ class Minesweeper {
     const self = this;
     let mineCount = 0;
 
-    this.browseAdjacentCells(cell, function(rowIndex, cellIndex) {
-      if (self.gameGrid.rows[rowIndex].cells[cellIndex].getAttribute(MINE_DATA_ATTRIBUTE) == "true") {
+    this.browseAdjacentCells(cell, (rowIndex, cellIndex) => {
+      if (self.gameGrid.rows[rowIndex].cells[cellIndex].getAttribute(MINE_DATA_ATTRIBUTE) == 'true') {
         mineCount++;
       }
     });
@@ -113,9 +113,9 @@ class Minesweeper {
   revealAllAdjacentCells(cell) {
     const self = this;
 
-    this.browseAdjacentCells(cell, function(rowIndex, cellIndex) {
+    this.browseAdjacentCells(cell, (rowIndex, cellIndex) => {
       const analyzedCell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if (analyzedCell.innerHTML == "") {
+      if (analyzedCell.innerHTML == '') {
         self.clickCell(analyzedCell);
       }
     });
@@ -126,9 +126,9 @@ class Minesweeper {
     let levelComplete = true;
     let analyzedCell = null;
 
-    this.browseAllCells(function(rowIndex, cellIndex) {
+    this.browseAllCells((rowIndex, cellIndex) => {
       analyzedCell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if ((analyzedCell.getAttribute(MINE_DATA_ATTRIBUTE) == "false") && (analyzedCell.innerHTML == "")) {
+      if ((analyzedCell.getAttribute(MINE_DATA_ATTRIBUTE) == 'false') && (analyzedCell.innerHTML == '')) {
         levelComplete = false;
       }
     });
@@ -136,7 +136,7 @@ class Minesweeper {
     if (levelComplete) {
       this.revealMines();
 
-      this.showMessage("You Win!");
+      this.showMessage('You Win!');
     }
   }
 
@@ -164,7 +164,7 @@ class Minesweeper {
   }
 
   showMessage(message) {
-    setTimeout(function() {
+    setTimeout(() => {
       alert(message);
     }, 100);
   }
