@@ -35,10 +35,6 @@ h1 {
   background: #0000FF;
 }
 
-button {
-  /* margin: 12px; */
-}
-
 #settings-button {
   position: absolute;
   left: 0px;
@@ -52,4 +48,12 @@ button {
   top: 22px;
   width: 350px;
   height: 350px;
+}
+
+#dashbord {
+  margin: 12px;
+}
+
+#reset-button {
+  margin: 0px 24px 0px 24px;
 }
