@@ -38,3 +38,9 @@ h1 {
 button {
   margin: 12px;
 }
+
+#settings-button {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}

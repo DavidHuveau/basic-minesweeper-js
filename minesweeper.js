@@ -18,6 +18,10 @@ class Minesweeper {
   constructor() {
     this.gameGrid = document.getElementById(GAME_GRID_ID);
 
+    this.minesNumber = 0;
+
+    this.revealMinesCounter = 0;
+
     this.bindEvent();
 
     this.generateGrid();
@@ -25,9 +29,10 @@ class Minesweeper {
 
   bindEvent() {
     const self = this;
-
     const resetButton = document.getElementById(RESET_BUTTON_ID);
+
     resetButton.onclick = function () {
+      self.revealMinesCounter = 0;
       self.generateGrid();
     };
   }
@@ -63,11 +68,14 @@ class Minesweeper {
   }
 
   addMinesRandomly() {
-    const minesNumber = Math.floor(
-      GAME_GRID_ROWS_NUMBER * GAME_GRID_CELLS_NUMBER * PERCENTAGE_OF_MINES,
+    this.minesNumber = Math.min(
+      99,
+      Math.floor(
+        GAME_GRID_ROWS_NUMBER * GAME_GRID_CELLS_NUMBER * PERCENTAGE_OF_MINES
+      )
     );
 
-    for (let index = 0; index < minesNumber; index++) {
+    for (let index = 0; index < this.minesNumber; index++) {
       const row = Math.floor(Math.random() * GAME_GRID_ROWS_NUMBER);
       const col = Math.floor(Math.random() * GAME_GRID_CELLS_NUMBER);
       const cell = this.gameGrid.rows[row].cells[col];

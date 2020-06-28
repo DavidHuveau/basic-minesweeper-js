@@ -3,12 +3,26 @@
 <head>
   <title>minesweeper</title>
   <link rel="stylesheet" href="style.css" type="text/css">
+  <script src="https://kit.fontawesome.com/b4b19cc1d4.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
   <h1>Minesweeper</h1>
-  <table id="game-grid">
-  </table>
-  <button id="reset-button">Reset Grid</button>
+  <div id="game-dashboard">
+    <span id="remaining-mines-counter-info">
+      <i class="fa fa-bomb" aria-hidden="true"></i> 99
+    </span>
+    <button id="reset-button">
+      <i class="fa fa-smile" aria-hidden="true"></i>
+    </button>
+    <span id="timer-info">
+      99 <i class="fa fa-clock" aria-hidden="true"></i>
+    </span>
+    <button id="settings-button">
+      <i class="fa fa-cog" aria-hidden="true"></i>
+    </button>
+  </div>
+  <table id="game-grid" />
 
   <script src="minesweeper.js"></script>
   <script src="index.js"></script>
