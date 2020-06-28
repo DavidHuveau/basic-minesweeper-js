@@ -2,10 +2,10 @@
 const RESET_BUTTON_ID = 'reset-button';
 const GAME_GRID_ID = 'game-grid';
 
-// mines
+// mines data attribute
 const MINE_DATA_ATTRIBUTE = 'data-mine';
 
-// Game board options
+// Game board settings
 const GAME_GRID_ROWS_NUMBER = 20;
 const GAME_GRID_CELLS_NUMBER = 30;
 
@@ -33,24 +33,33 @@ class Minesweeper {
   }
 
   generateGrid() {
-    const self = this;
-
     this.gameGrid.innerHTML = '';
 
     for (let rowIndex = 0; rowIndex < GAME_GRID_ROWS_NUMBER; rowIndex++) {
       const row = this.gameGrid.insertRow(rowIndex);
-      for (let cellIndex = 0; cellIndex < GAME_GRID_CELLS_NUMBER; cellIndex++) {
-        const cell = row.insertCell(cellIndex);
-        cell.onclick = function () {
-          self.clickCell(this);
-        };
-        const mine = document.createAttribute(MINE_DATA_ATTRIBUTE);
-        mine.value = 'false';
-        cell.setAttributeNode(mine);
+      for (let colIndex = 0; colIndex < GAME_GRID_CELLS_NUMBER; colIndex++) {
+        this.generateCell(row, colIndex);
       }
     }
 
     this.addMinesRandomly();
+  }
+
+  generateCell(row, colIndex) {
+    const self = this;
+    const cell = row.insertCell(colIndex);
+
+    cell.onclick = function () {
+      self.clickCell(this);
+    };
+    cell.oncontextmenu = function (e) {
+      self.rightClickCell(this);
+      e.preventDefault();
+    }
+
+    const mine = document.createAttribute(MINE_DATA_ATTRIBUTE);
+    mine.value = 'false';
+    cell.setAttributeNode(mine);
   }
 
   addMinesRandomly() {
@@ -100,6 +109,12 @@ class Minesweeper {
     }
   }
 
+  rightClickCell(cell) {
+    if (!cell.classList.contains("clicked")) {
+      cell.classList.toggle("flag");
+    }
+  }
+
   countAdjacentMines(cell) {
     const self = this;
     let mineCount = 0;
@@ -146,8 +161,8 @@ class Minesweeper {
 
   browseAllCells(cb) {
     for (let rowIndex = 0; rowIndex < this.gameGrid.rows.length; rowIndex++) {
-      for (let cellIndex = 0; cellIndex < this.gameGrid.rows[rowIndex].cells.length; cellIndex++) {
-        cb(rowIndex, cellIndex);
+      for (let colIndex = 0; colIndex < this.gameGrid.rows[rowIndex].cells.length; colIndex++) {
+        cb(rowIndex, colIndex);
       }
     }
   }
@@ -158,16 +173,16 @@ class Minesweeper {
     const cellColPosition = cell.cellIndex;
 
     const maxRowPosition = GAME_GRID_ROWS_NUMBER - 1;
-    const maxCellPosition = GAME_GRID_CELLS_NUMBER - 1;
+    const maxColPosition = GAME_GRID_CELLS_NUMBER - 1;
 
     const startRowIndex = Math.max(cellRowPosition - 1, 0);
     const endRowIndex = Math.min(cellRowPosition + 1, maxRowPosition);
 
     for (let rowIndex = startRowIndex; rowIndex <= endRowIndex; rowIndex++) {
       const startCellIndex = Math.max(cellColPosition - 1, 0);
-      const endCellIndex = Math.min(cellColPosition + 1, maxCellPosition);
-      for (let cellIndex = startCellIndex; cellIndex <= endCellIndex; cellIndex++) {
-        cb(rowIndex, cellIndex);
+      const endCellIndex = Math.min(cellColPosition + 1, maxColPosition);
+      for (let colIndex = startCellIndex; colIndex <= endCellIndex; colIndex++) {
+        cb(rowIndex, colIndex);
       }
     }
   }
@@ -179,5 +194,3 @@ class Minesweeper {
     }, 100);
   }
 }
-
-module.exports = Minesweeper;

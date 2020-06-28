@@ -31,6 +31,10 @@ h1 {
     background: #FF0000;
 }
 
+#game-grid tr td.flag {
+  background: #0000FF;
+}
+
 button {
   margin: 12px;
 }
