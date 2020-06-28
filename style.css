@@ -47,7 +47,11 @@ h1 {
   left: 1px;
   top: 22px;
   width: 350px;
-  height: 350px;
+  height: 150px;
+
+  padding: 12px;
+  color: black;
+  text-align: left;
 }
 
 #dashbord {
@@ -56,4 +60,11 @@ h1 {
 
 #reset-button {
   margin: 0px 24px 0px 24px;
+}
+
+#apply-settings-button {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  margin: 12px;
 }
