@@ -1,6 +1,8 @@
 // Elements ID
 const RESET_BUTTON_ID = 'reset-button';
 const GAME_GRID_ID = 'game-grid';
+const SETTINGS_BUTTON_ID = "settings-button";
+const SETTINGS_PANEL_ID = "settings-panel";
 
 // mines data attribute
 const MINE_DATA_ATTRIBUTE = 'data-mine';
@@ -16,25 +18,43 @@ const testMode = true;
 
 class Minesweeper {
   constructor() {
-    this.gameGrid = document.getElementById(GAME_GRID_ID);
+    this.gameGrid = this.domElement(GAME_GRID_ID);
+
+    this.isShowSettings = false;
 
     this.minesNumber = 0;
-
+    
     this.revealMinesCounter = 0;
 
     this.bindEvent();
 
     this.generateGrid();
+
+    this.refreshLayout();
   }
 
   bindEvent() {
     const self = this;
-    const resetButton = document.getElementById(RESET_BUTTON_ID);
+    const resetButton = self.domElement(RESET_BUTTON_ID);
 
     resetButton.onclick = function () {
       self.revealMinesCounter = 0;
       self.generateGrid();
     };
+
+    const settingsButton = self.domElement(SETTINGS_BUTTON_ID);
+    settingsButton.onclick = function () {
+      self.isShowSettings = !self.isShowSettings;
+      self.refreshLayout();
+    }
+  }
+
+  refreshLayout() {
+    if (this.isShowSettings) {
+      this.show(SETTINGS_PANEL_ID);
+    } else {
+      this.hide(SETTINGS_PANEL_ID);
+    }
   }
 
   generateGrid() {
@@ -101,7 +121,6 @@ class Minesweeper {
   clickCell(cell) {
     if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === 'true') {
       this.revealMines();
-
       this.showMessage('Game Over');
     } else {
       cell.className = 'clicked';
@@ -160,23 +179,20 @@ class Minesweeper {
 
     if (levelComplete) {
       this.revealMines();
-
       this.showMessage('You Win!');
     }
   }
 
-  // Tools
-
-  browseAllCells(cb) {
+  browseAllCells(fn) {
     for (let rowIndex = 0; rowIndex < this.gameGrid.rows.length; rowIndex++) {
       for (let colIndex = 0; colIndex < this.gameGrid.rows[rowIndex].cells.length; colIndex++) {
-        cb(rowIndex, colIndex);
+        fn(rowIndex, colIndex);
       }
     }
   }
 
   // eslint-disable-next-line class-methods-use-this
-  browseAdjacentCells(cell, cb) {
+  browseAdjacentCells(cell, fn) {
     const cellRowPosition = cell.parentNode.rowIndex;
     const cellColPosition = cell.cellIndex;
 
@@ -190,15 +206,54 @@ class Minesweeper {
       const startCellIndex = Math.max(cellColPosition - 1, 0);
       const endCellIndex = Math.min(cellColPosition + 1, maxColPosition);
       for (let colIndex = startCellIndex; colIndex <= endCellIndex; colIndex++) {
-        cb(rowIndex, colIndex);
+        fn(rowIndex, colIndex);
       }
     }
   }
+
+  // --------------------------------------------------------
+  // utilities
+  // --------------------------------------------------------
 
   // eslint-disable-next-line class-methods-use-this
   showMessage(message) {
     setTimeout(() => {
       alert(message); // eslint-disable-line no-alert
     }, 100);
+  }
+
+  isString(data) {
+    return typeof data === "string" || data instanceof String;
+  }
+
+  domElement(classOrId) {
+    const char = classOrId.charAt(0);
+    if (char !== "." && char !== "#") {
+      classOrId = "#" + classOrId;
+    }
+    return document.querySelector(classOrId);
+  }
+
+  iterateOnDomElements(classOrIds, fn) {
+    if (this.isString(classOrIds)) {
+      classOrIds = [classOrIds];
+    }
+
+    const self = this;
+    classOrIds.forEach(function(id) {
+      fn(self.domElement(id));
+    });
+  }
+
+  hide(classOrIds) {
+    this.iterateOnDomElements(classOrIds, function(e) {
+      e.style.display = "none";
+    });
+  }
+
+  show(classOrIds) {
+    this.iterateOnDomElements(classOrIds, function(e) {
+      e.style.display = "block";
+    });
   }
 }

@@ -36,11 +36,20 @@ h1 {
 }
 
 button {
-  margin: 12px;
+  /* margin: 12px; */
 }
 
 #settings-button {
   position: absolute;
   left: 0px;
   top: 0px;
+}
+
+#settings-panel {
+  background: #dddddd;
+  position:absolute;
+  left: 1px;
+  top: 22px;
+  width: 350px;
+  height: 350px;
 }
