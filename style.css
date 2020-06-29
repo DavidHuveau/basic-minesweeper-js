@@ -62,9 +62,14 @@ h1 {
   margin: 0px 24px 0px 24px;
 }
 
-#apply-settings-button {
+#settings-apply-button {
   position: absolute;
   right: 0px;
   bottom: 0px;
   margin: 12px;
+}
+
+select {
+  display: block;
+  width: 100%;
 }
