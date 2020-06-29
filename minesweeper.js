@@ -1,6 +1,6 @@
 // Elements ID
-const RESET_BUTTON_ID = 'reset-button';
-const GAME_GRID_ID = 'game-grid';
+const RESET_BUTTON_ID = "reset-button";
+const GAME_GRID_ID = "game-grid";
 const SETTINGS_BUTTON_ID = "settings-button";
 const SETTINGS_PANEL_ID = "settings-panel";
 const SETTINGS_APPLY_BUTTON_ID = "settings-apply-button";
@@ -8,19 +8,19 @@ const SETTINGS_SIZE_SELECT_ID = "settings-size-select";
 const SETTINGS_LEVEL_SELECT_ID = "settings-level-select";
 
 // mines data attribute
-const MINE_DATA_ATTRIBUTE = 'data-mine';
+const MINE_DATA_ATTRIBUTE = "data-mine";
 
 // game settings
 const MAP_SIZES = {
-  "small": [10, 10],
-  "medium": [20, 20],
-  "large": [20, 40]
-}
+  small: [10, 10],
+  medium: [20, 20],
+  large: [20, 40],
+};
 const LEVELS = {
-  "easy": 0.1,
-  "medium": 0.2,
-  "hard": 0.3
-}
+  easy: 0.1,
+  medium: 0.2,
+  hard: 0.3,
+};
 
 // Turn this variable to true to see where the mines are
 const testMode = true;
@@ -50,7 +50,7 @@ class Minesweeper {
     settingsButton.onclick = function () {
       self.isShowSettings = !self.isShowSettings;
       self.refreshLayout();
-    }
+    };
 
     const applySettingsButton = this.domElement(SETTINGS_APPLY_BUTTON_ID);
     applySettingsButton.onclick = function () {
@@ -59,7 +59,7 @@ class Minesweeper {
 
       self.isShowSettings = false;
       self.refreshLayout();
-    }
+    };
   }
 
   refreshLayout() {
@@ -73,11 +73,11 @@ class Minesweeper {
   initSettings() {
     this.isShowSettings = false;
 
-    const [ rowsNumber, colsNumber ] = MAP_SIZES["small"];
+    const [rowsNumber, colsNumber] = MAP_SIZES.small;
     this.gameGridRowsNumber = rowsNumber;
     this.gameGridColsNumber = colsNumber;
 
-    const percentageOfMines = LEVELS["easy"];
+    const percentageOfMines = LEVELS.easy;
     this.percentageOfMines = percentageOfMines;
 
     this.initSettingsPanel();
@@ -90,7 +90,7 @@ class Minesweeper {
 
   changeSettings() {
     const settingsSizeSelect = this.domElement(SETTINGS_SIZE_SELECT_ID);
-    const [ rowsNumber, colsNumber ] = MAP_SIZES[settingsSizeSelect.value];
+    const [rowsNumber, colsNumber] = MAP_SIZES[settingsSizeSelect.value];
     this.gameGridRowsNumber = rowsNumber;
     this.gameGridColsNumber = colsNumber;
 
@@ -107,7 +107,7 @@ class Minesweeper {
   }
 
   generateGrid() {
-    this.gameGrid.innerHTML = '';
+    this.gameGrid.innerHTML = "";
 
     for (let rowIndex = 0; rowIndex < this.gameGridRowsNumber; rowIndex++) {
       const row = this.gameGrid.insertRow(rowIndex);
@@ -129,26 +129,26 @@ class Minesweeper {
     cell.oncontextmenu = function (e) {
       self.rightClickCell(this);
       e.preventDefault();
-    }
+    };
 
     const mine = document.createAttribute(MINE_DATA_ATTRIBUTE);
-    mine.value = 'false';
+    mine.value = "false";
     cell.setAttributeNode(mine);
   }
 
   addMinesRandomly() {
     this.minesNumber = Math.min(
       99,
-      Math.floor(this.gameGridRowsNumber * this.gameGridColsNumber * this.percentageOfMines)
+      Math.floor(this.gameGridRowsNumber * this.gameGridColsNumber * this.percentageOfMines),
     );
 
     for (let index = 0; index < this.minesNumber; index++) {
       const row = Math.floor(Math.random() * this.gameGridRowsNumber);
       const col = Math.floor(Math.random() * this.gameGridColsNumber);
       const cell = this.gameGrid.rows[row].cells[col];
-      cell.setAttribute(MINE_DATA_ATTRIBUTE, 'true');
+      cell.setAttribute(MINE_DATA_ATTRIBUTE, "true");
       if (testMode) {
-        cell.innerHTML = 'X';
+        cell.innerHTML = "X";
       }
     }
   }
@@ -158,19 +158,19 @@ class Minesweeper {
 
     this.browseAllCells((rowIndex, cellIndex) => {
       const cell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === 'true') {
-        cell.className = 'mine';
+      if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === "true") {
+        cell.className = "mine";
       }
     });
   }
 
   // Check if the user clicked on a mine
   clickCell(cell) {
-    if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === 'true') {
+    if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === "true") {
       this.revealMines();
-      this.showMessage('Game Over');
+      this.showMessage("Game Over");
     } else {
-      cell.className = 'clicked';
+      cell.className = "clicked";
 
       const mineCount = this.countAdjacentMines(cell);
       cell.innerHTML = mineCount;
@@ -194,7 +194,7 @@ class Minesweeper {
     let mineCount = 0;
 
     this.browseAdjacentCells(cell, (rowIndex, cellIndex) => {
-      if (self.gameGrid.rows[rowIndex].cells[cellIndex].getAttribute(MINE_DATA_ATTRIBUTE) === 'true') {
+      if (self.gameGrid.rows[rowIndex].cells[cellIndex].getAttribute(MINE_DATA_ATTRIBUTE) === "true") {
         mineCount++;
       }
     });
@@ -206,7 +206,7 @@ class Minesweeper {
 
     this.browseAdjacentCells(cell, (rowIndex, cellIndex) => {
       const analyzedCell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if (analyzedCell.innerHTML === '') {
+      if (analyzedCell.innerHTML === "") {
         self.clickCell(analyzedCell);
       }
     });
@@ -219,14 +219,14 @@ class Minesweeper {
 
     this.browseAllCells((rowIndex, cellIndex) => {
       analyzedCell = self.gameGrid.rows[rowIndex].cells[cellIndex];
-      if ((analyzedCell.getAttribute(MINE_DATA_ATTRIBUTE) === 'false') && (analyzedCell.innerHTML === '')) {
+      if ((analyzedCell.getAttribute(MINE_DATA_ATTRIBUTE) === "false") && (analyzedCell.innerHTML === "")) {
         levelComplete = false;
       }
     });
 
     if (levelComplete) {
       this.revealMines();
-      this.showMessage('You Win!');
+      this.showMessage("You Win!");
     }
   }
 
@@ -273,14 +273,10 @@ class Minesweeper {
     return typeof data === "string" || data instanceof String;
   }
 
-  isArray(data) {
-    return typeof data === "array" || data instanceof Array;
-  }
-
   domElement(classOrId) {
     const char = classOrId.charAt(0);
     if (char !== "." && char !== "#") {
-      classOrId = "#" + classOrId;
+      classOrId = `#${classOrId}`;
     }
     return document.querySelector(classOrId);
   }
@@ -291,19 +287,19 @@ class Minesweeper {
     }
 
     const self = this;
-    classOrIds.forEach(function(id) {
+    classOrIds.forEach((id) => {
       fn(self.domElement(id));
     });
   }
 
   hide(classOrIds) {
-    this.iterateOnDomElements(classOrIds, function(e) {
+    this.iterateOnDomElements(classOrIds, (e) => {
       e.style.display = "none";
     });
   }
 
   show(classOrIds) {
-    this.iterateOnDomElements(classOrIds, function(e) {
+    this.iterateOnDomElements(classOrIds, (e) => {
       e.style.display = "block";
     });
   }
@@ -312,13 +308,13 @@ class Minesweeper {
     if (!classOrIdTarget) {
       return;
     }
-    if (!this.isArray(values) || values.length === 0) {
+    if (!Array.isArray(values) || values.length === 0) {
       return;
     }
 
     const select = this.domElement(classOrIdTarget);
-    values.forEach(key => {
-      const option = document.createElement('option');
+    values.forEach((key) => {
+      const option = document.createElement("option");
       option.value = key;
       option.innerHTML = key;
       select.appendChild(option);

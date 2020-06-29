@@ -6,6 +6,7 @@ module.exports = {
   rules: {
     "no-plusplus": "off",
     "func-names": "off",
-    "no-param-reassign": ["error", { props: false }]
+    "no-param-reassign": ["error", { props: false }],
+    "quotes": ["error", "double"]
   }
 };
