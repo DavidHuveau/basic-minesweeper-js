@@ -1,16 +1,21 @@
-// Elements ID
-const RESET_BUTTON_ID = "reset-button";
 const GAME_GRID_ID = "game-grid";
+
+// Dashborad elements ids
+const REMAINING_MINES_COUNTER_INFO_ID = "remaining-mines-counter-info";
+const RESET_BUTTON_ID = "reset-button";
+const TIMER_INFO = "timer-info";
+
+// Setting elements ids
 const SETTINGS_BUTTON_ID = "settings-button";
 const SETTINGS_PANEL_ID = "settings-panel";
 const SETTINGS_APPLY_BUTTON_ID = "settings-apply-button";
 const SETTINGS_SIZE_SELECT_ID = "settings-size-select";
 const SETTINGS_LEVEL_SELECT_ID = "settings-level-select";
 
-// mines data attribute
+// Mines data attribute
 const MINE_DATA_ATTRIBUTE = "data-mine";
 
-// game settings
+// Game settings
 const MAP_SIZES = {
   small: [10, 10],
   medium: [20, 20],
@@ -73,12 +78,11 @@ class Minesweeper {
   initSettings() {
     this.isShowSettings = false;
 
-    const [rowsNumber, colsNumber] = MAP_SIZES.small;
+    const [rowsNumber, colsNumber] = MAP_SIZES.medium;
     this.gameGridRowsNumber = rowsNumber;
     this.gameGridColsNumber = colsNumber;
 
-    const percentageOfMines = LEVELS.easy;
-    this.percentageOfMines = percentageOfMines;
+    this.percentageOfMines = LEVELS.medium;
 
     this.initSettingsPanel();
   }
@@ -95,8 +99,7 @@ class Minesweeper {
     this.gameGridColsNumber = colsNumber;
 
     const settingsLevelSelect = this.domElement(SETTINGS_LEVEL_SELECT_ID);
-    const percentageOfMines = LEVELS[settingsLevelSelect.value];
-    this.percentageOfMines = percentageOfMines;
+    this.percentageOfMines = LEVELS[settingsLevelSelect.value];
   }
 
   startGame() {
@@ -151,6 +154,8 @@ class Minesweeper {
         cell.innerHTML = "X";
       }
     }
+
+    this.refreshMinesCounter();
   }
 
   revealMines() {
@@ -186,7 +191,19 @@ class Minesweeper {
   rightClickCell(cell) {
     if (!cell.classList.contains("clicked")) {
       cell.classList.toggle("flag");
+      if (cell.classList.contains("flag")) {
+        this.revealMinesCounter++;
+      } else {
+        this.revealMinesCounter--;
+      }
+
+      this.refreshMinesCounter();
     }
+  }
+
+  refreshMinesCounter() {
+    const remainingMinesCounterInfo = this.domElement(REMAINING_MINES_COUNTER_INFO_ID);
+    remainingMinesCounterInfo.innerHTML = String(`0${this.minesNumber}` - this.revealMinesCounter).slice(-2);
   }
 
   countAdjacentMines(cell) {
