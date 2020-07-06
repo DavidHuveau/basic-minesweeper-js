@@ -27,6 +27,8 @@ const LEVELS = {
   hard: 0.3,
 };
 
+const TIMER_INITIAL_VALUE = 99;
+
 // Turn this variable to true to see where the mines are
 const testMode = true;
 
@@ -35,11 +37,8 @@ class Minesweeper {
     this.gameGrid = this.domElement(GAME_GRID_ID);
 
     this.initSettings();
-
     this.bindEvent();
-
     this.startGame();
-
     this.refreshLayout();
   }
 
@@ -48,6 +47,7 @@ class Minesweeper {
 
     const resetButton = this.domElement(RESET_BUTTON_ID);
     resetButton.onclick = function () {
+      self.stopCountdown();
       self.startGame();
     };
 
@@ -78,7 +78,7 @@ class Minesweeper {
   initSettings() {
     this.isShowSettings = false;
 
-    const [rowsNumber, colsNumber] = MAP_SIZES.medium;
+    const [rowsNumber, colsNumber] = MAP_SIZES.small;
     this.gameGridRowsNumber = rowsNumber;
     this.gameGridColsNumber = colsNumber;
 
@@ -105,8 +105,16 @@ class Minesweeper {
   startGame() {
     this.minesNumber = 0;
     this.revealMinesCounter = 0;
+    this.countdownValue = TIMER_INITIAL_VALUE;
+    this.playTimer = null;
 
     this.generateGrid();
+    this.refreshTimerInfo();
+  }
+
+  stopGame() {
+    this.stopCountdown();
+    this.revealMines();
   }
 
   generateGrid() {
@@ -171,8 +179,10 @@ class Minesweeper {
 
   // Check if the user clicked on a mine
   clickCell(cell) {
+    this.handleStartCountdown();
+
     if (cell.getAttribute(MINE_DATA_ATTRIBUTE) === "true") {
-      this.revealMines();
+      this.stopGame();
       this.showMessage("Game Over");
     } else {
       cell.className = "clicked";
@@ -189,6 +199,8 @@ class Minesweeper {
   }
 
   rightClickCell(cell) {
+    this.handleStartCountdown();
+
     if (!cell.classList.contains("clicked")) {
       cell.classList.toggle("flag");
       if (cell.classList.contains("flag")) {
@@ -203,7 +215,13 @@ class Minesweeper {
 
   refreshMinesCounter() {
     const remainingMinesCounterInfo = this.domElement(REMAINING_MINES_COUNTER_INFO_ID);
-    remainingMinesCounterInfo.innerHTML = String(`0${this.minesNumber}` - this.revealMinesCounter).slice(-2);
+    const remainingMinesCounter = this.minesNumber - this.revealMinesCounter;
+    remainingMinesCounterInfo.innerHTML = this.formatOnTwoDigits(remainingMinesCounter);
+  }
+
+  refreshTimerInfo() {
+    const timerInfo = this.domElement(TIMER_INFO);
+    timerInfo.innerHTML = this.formatOnTwoDigits(this.countdownValue);
   }
 
   countAdjacentMines(cell) {
@@ -242,7 +260,7 @@ class Minesweeper {
     });
 
     if (levelComplete) {
-      this.revealMines();
+      this.stopGame();
       this.showMessage("You Win!");
     }
   }
@@ -276,6 +294,41 @@ class Minesweeper {
   }
 
   // --------------------------------------------------------
+  // Countdown
+  // --------------------------------------------------------
+
+  handleStartCountdown() {
+    if (!this.playTimer) {
+      this.startCountdown();
+    }
+  }
+
+  startCountdown() {
+    const self = this;
+
+    this.timeStart = new Date();
+    this.playTimer = setInterval(() => {
+      const timeNow = new Date();
+      const timeInterval = new Date(timeNow - self.timeStart);
+      self.countdownValue = TIMER_INITIAL_VALUE - timeInterval.getSeconds();
+
+      self.refreshTimerInfo();
+      self.handleEndOfCountdown();
+    }, 1000);
+  }
+
+  handleEndOfCountdown() {
+    if (this.countdownValue <= 0) {
+      this.stopGame();
+      this.showMessage("Game Over");
+    }
+  }
+
+  stopCountdown() {
+    clearInterval(this.playTimer);
+  }
+
+  // --------------------------------------------------------
   // utilities
   // --------------------------------------------------------
 
@@ -286,21 +339,23 @@ class Minesweeper {
     }, 100);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   isString(data) {
     return typeof data === "string" || data instanceof String;
   }
 
+  // eslint-disable-next-line class-methods-use-this
   domElement(classOrId) {
     const char = classOrId.charAt(0);
     if (char !== "." && char !== "#") {
-      classOrId = `#${classOrId}`;
+      classOrId = `#${classOrId}`; // eslint-disable-line no-param-reassign
     }
     return document.querySelector(classOrId);
   }
 
   iterateOnDomElements(classOrIds, fn) {
     if (this.isString(classOrIds)) {
-      classOrIds = [classOrIds];
+      classOrIds = [classOrIds]; // eslint-disable-line no-param-reassign
     }
 
     const self = this;
@@ -336,5 +391,10 @@ class Minesweeper {
       option.innerHTML = key;
       select.appendChild(option);
     });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  formatOnTwoDigits(value) {
+    return String(`0${value}`).slice(-2);
   }
 }
