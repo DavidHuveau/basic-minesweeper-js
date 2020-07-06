@@ -5,6 +5,8 @@ const REMAINING_MINES_COUNTER_INFO_ID = "remaining-mines-counter-info";
 const RESET_BUTTON_ID = "reset-button";
 const TIMER_INFO = "timer-info";
 
+const OVERLAY = "overlay";
+
 // Setting elements ids
 const SETTINGS_BUTTON_ID = "settings-button";
 const SETTINGS_PANEL_ID = "settings-panel";
@@ -69,8 +71,10 @@ class Minesweeper {
 
   refreshLayout() {
     if (this.isShowSettings) {
+      this.show(OVERLAY);
       this.show(SETTINGS_PANEL_ID);
     } else {
+      this.hide(OVERLAY);
       this.hide(SETTINGS_PANEL_ID);
     }
   }
